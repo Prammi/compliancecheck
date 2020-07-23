@@ -26,66 +26,87 @@ namespace ComplianceCheck
 
                 var controlPanel = "control.exe";
                 var notepad = "notepad.exe";
+                var internetexplorer = "iexplore.exe";
 
                 var notepadLocation = LocateEXE(notepad);
                 var controlLocation = LocateEXE(controlPanel);
+                var iexploreLocation = @"C:\Program Files (x86)\Internet Explorer\iexplore.exe";
+
 
                 var controlPanelOptions = new DesktopOptions { ApplicationPath = controlLocation };
                 var notepadOptions = new DesktopOptions { ApplicationPath = notepadLocation };
+                var iexploreOptions = new DesktopOptions { ApplicationPath = iexploreLocation };
 
 
-                WiniumDriver windriver = new WiniumDriver(service, controlPanelOptions, TimeSpan.FromSeconds(60));
+
+                WiniumDriver windriver = new WiniumDriver(service, iexploreOptions, TimeSpan.FromSeconds(60));
                 Thread.Sleep(1000);
-
-                string parent = windriver.CurrentWindowHandle;
-
-                windriver.FindElementByClassName("SearchEditBox").SendKeys("change screen saver");
+                windriver.FindElementByName("Tools").Click();
                 Thread.Sleep(1000);
-
-
-                windriver.FindElementById("tasklink").Click();
+                windriver.FindElementByName("Internet options").Click();
                 Thread.Sleep(1000);
-
-                string child = windriver.CurrentWindowHandle;
-
-                IWebElement window = windriver.FindElementByClassName("#32770");
+                windriver.FindElementByName("Advanced").Click();
                 Thread.Sleep(1000);
-                //windriver.FindElementByClassName("#32770");
-
-                //String child  = windriver.CurrentWindowHandle;
-
-                windriver.SwitchTo().Window(parent);
+                var isenabled = windriver.FindElementByName("Reset...").GetAttribute("IsEnabled");
                 Thread.Sleep(1000);
-                windriver.FindElementByName("Close").Click();
-                Thread.Sleep(1000);
-                windriver.SwitchTo().Window(child);
-                Thread.Sleep(1000);
-                // IWebElement scwindow = windriver.FindElementByClassName("#32770");
-
-                var scwindow = windriver.FindElementByName("Screen Saver Settings");
-                var scwindow2 = scwindow.FindElement(By.Name("Screen Saver"));
-
-                var list = scwindow2.FindElements(By.XPath(".//*"));
-
-                Thread.Sleep(2000);
-                var x = "";
-                for (int i = 0; i < list.Count; i++)
-                {
-                    var xx = list[i].GetAttribute("AutomationId");
-                    var xxx = list[i].GetAttribute("Name");
-
-                    if (xx == "1307")
-                    {
-                        x = x + list[i].GetAttribute("IsEnabled");
-
-                    }
-
-                }
-                //var x = scwindow.FindElement(By.ClassName("Edit")).TagName;
-                Thread.Sleep(2000);
 
                 WiniumDriver windriver2 = new WiniumDriver(service, notepadOptions, TimeSpan.FromSeconds(60));
-                windriver2.FindElementByClassName("Edit").SendKeys("TimeoutEnabled:-   " + x);
+                windriver2.FindElementByClassName("Edit").SendKeys("isEnabled:-   " + isenabled);
+
+                #region timout
+                //WiniumDriver windriver = new WiniumDriver(service, controlPanelOptions, TimeSpan.FromSeconds(60));
+                //Thread.Sleep(1000);
+
+                //string parent = windriver.CurrentWindowHandle;
+
+                //windriver.FindElementByClassName("SearchEditBox").SendKeys("change screen saver");
+                //Thread.Sleep(1000);
+
+
+                //windriver.FindElementById("tasklink").Click();
+                //Thread.Sleep(1000);
+
+                //string child = windriver.CurrentWindowHandle;
+
+                //IWebElement window = windriver.FindElementByClassName("#32770");
+                //Thread.Sleep(1000);
+                ////windriver.FindElementByClassName("#32770");
+
+                ////String child  = windriver.CurrentWindowHandle;
+
+                //windriver.SwitchTo().Window(parent);
+                //Thread.Sleep(1000);
+                //windriver.FindElementByName("Close").Click();
+                //Thread.Sleep(1000);
+                //windriver.SwitchTo().Window(child);
+                //Thread.Sleep(1000);
+                //// IWebElement scwindow = windriver.FindElementByClassName("#32770");
+
+                //var scwindow = windriver.FindElementByName("Screen Saver Settings");
+                //var scwindow2 = scwindow.FindElement(By.Name("Screen Saver"));
+
+                //var list = scwindow2.FindElements(By.XPath(".//*"));
+
+                //Thread.Sleep(2000);
+                //var x = "";
+                //for (int i = 0; i < list.Count; i++)
+                //{
+                //    var xx = list[i].GetAttribute("AutomationId");
+                //    var xxx = list[i].GetAttribute("Name");
+
+                //    if (xx == "1307")
+                //    {
+                //        x = x + list[i].GetAttribute("IsEnabled");
+
+                //    }
+
+                //}
+                ////var x = scwindow.FindElement(By.ClassName("Edit")).TagName;
+                //Thread.Sleep(2000);
+
+                //WiniumDriver windriver2 = new WiniumDriver(service, notepadOptions, TimeSpan.FromSeconds(60));
+                //windriver2.FindElementByClassName("Edit").SendKeys("TimeoutEnabled:-   " + x);
+                #endregion
 
             }
             catch (Exception ex)
