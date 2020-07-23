@@ -28,7 +28,7 @@ namespace ComplianceCheck
                 var notepad = "notepad.exe";
                 var internetexplorer = "iexplore.exe";
 
-                var notepadLocation = LocateEXE(notepad);
+                var notepadLocation = @"C:\Windows\System32\notepad.exe";
                 var controlLocation = LocateEXE(controlPanel);
                 var iexploreLocation = @"C:\Program Files (x86)\Internet Explorer\iexplore.exe";
 
@@ -40,18 +40,25 @@ namespace ComplianceCheck
 
 
                 WiniumDriver windriver = new WiniumDriver(service, iexploreOptions, TimeSpan.FromSeconds(60));
+                //WiniumDriver windriver2 = new WiniumDriver(service, notepadOptions, TimeSpan.FromSeconds(60));
+                string parent = windriver.CurrentWindowHandle;
                 Thread.Sleep(1000);
                 windriver.FindElementByName("Tools").Click();
                 Thread.Sleep(1000);
+                String child = windriver.CurrentWindowHandle;
                 windriver.FindElementByName("Internet options").Click();
                 Thread.Sleep(1000);
                 windriver.FindElementByName("Advanced").Click();
                 Thread.Sleep(1000);
-                var isenabled = windriver.FindElementByName("Reset...").GetAttribute("IsEnabled");
+                var iseabled= windriver.FindElementByName("Reset...").GetAttribute("IsEnabled");
                 Thread.Sleep(1000);
-
+                //windriver.FindElementByName("Reset...").Click();
+                //Thread.Sleep(1000);
+                windriver.FindElementByName("Close").Click();
+               
                 WiniumDriver windriver2 = new WiniumDriver(service, notepadOptions, TimeSpan.FromSeconds(60));
-                windriver2.FindElementByClassName("Edit").SendKeys("isEnabled:-   " + isenabled);
+                Thread.Sleep(1000);
+                windriver2.FindElementByClassName("Edit").SendKeys("isEnabled:-   " + iseabled);
 
                 #region timout
                 //WiniumDriver windriver = new WiniumDriver(service, controlPanelOptions, TimeSpan.FromSeconds(60));
